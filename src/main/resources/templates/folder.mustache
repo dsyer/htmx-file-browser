@@ -1,0 +1,13 @@
+
+<div>
+	{{#open}}<a href="" hx-get="/close/{{encoded}}" hx-target="closest div">-</a>{{/open}}
+	{{^open}}<a href="" hx-get="/open/{{encoded}}" hx-target="closest div">+</a>{{/open}}
+	<span>{{name}}</span>
+	{{#open}}
+		<div>
+			{{#children}}
+			{{#html}}{{/html}}
+			{{/children}}
+		</div>
+	{{/open}}
+</div>

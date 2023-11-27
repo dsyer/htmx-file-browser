@@ -7,10 +7,12 @@
 	<meta name='viewport' content='width=device-width, initial-scale=1'>
 	<link rel="stylesheet" type="text/css" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
 	<script src='https://unpkg.com/bootstrap/dist/js/bootstrap.min.js'></script>
-	<script src='https://unpkg.com/htmx.org/dist/htmx.min.js'></script>
+	<script src='https://unpkg.com/htmx.org/dist/htmx.js'></script>
 </head>
 <body>
-	<h1>Spring Boot Demo</h1>
-	<p>Spring Boot Demo</p>
+	<h1>Browse</h1>
+	<div class="container">
+		{{#root}}{{#html}}{{/html}}{{/root}}
+	</div>
 </body>
 </html>

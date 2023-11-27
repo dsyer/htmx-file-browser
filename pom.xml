@@ -17,6 +17,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<jstach.version>1.3.4</jstach.version>
+		<htmx-spring-boot.version>3.0.0</htmx-spring-boot.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -28,6 +29,11 @@
 			<artifactId>jstachio-spring-boot-starter-webmvc</artifactId>
 			<version>${jstach.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>io.github.wimdeblauwe</groupId>
+			<artifactId>htmx-spring-boot</artifactId>
+			<version>${htmx-spring-boot.version}</version>
+		  </dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

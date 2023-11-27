@@ -50,6 +50,18 @@ class HomeController {
 	}
 }
 
+@JStache(path = "file")
+class FileIcon {
+}
+
+@JStache(path = "folder")
+class FolderIcon {
+}
+
+@JStache(path = "caret")
+class CaretIcon {
+}
+
 @JStache(path = "index")
 class IndexPage {
 	private Closed root;
@@ -67,13 +79,16 @@ class IndexPage {
 	}
 }
 
-@JStache(template = "<span>{{name}}</span><br/>")
 class Node implements Comparable<Node> {
 	private String name;
 	private Node parent;
 
 	public boolean isLeaf() {
 		return true;
+	}
+
+	public int getLevel() {
+		return parent == null ? 0 : ((Closed) parent).getLevel() + 1;
 	}
 
 	public static String decode(String path) {

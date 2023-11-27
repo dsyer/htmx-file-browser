@@ -1,5 +1,11 @@
 
-<div>
-	{{^leaf}}<a href="" hx-get="/open/{{encoded}}" hx-target="closest div">+</a>{{/leaf}}
-	<span>{{name}}</span>
-</div>
+{{^leaf}}
+<li class="li-folder">
+	<a href="" hx-get="/open/{{encoded}}" hx-target="closest li" class="folder level-{{level}}"><span class="text"><span class="folder-hide">{{>caret}}</span> {{>folder}} {{name}}</span></a>
+</li>
+{{/leaf}}
+{{#leaf}}
+<li class="li-file">
+	<span class="file level-{{level}}"><span class="text">{{>file}} {{name}}</span></span>
+</li>
+{{/leaf}}

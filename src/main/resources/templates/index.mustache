@@ -6,13 +6,16 @@
 	<title>Demo</title>
 	<meta name='viewport' content='width=device-width, initial-scale=1'>
 	<link rel="stylesheet" type="text/css" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="/main.css" />
 	<script src='https://unpkg.com/bootstrap/dist/js/bootstrap.min.js'></script>
 	<script src='https://unpkg.com/htmx.org/dist/htmx.js'></script>
 </head>
 <body>
 	<h1>Browse</h1>
 	<div class="container">
-		{{#root}}{{<closed}}{{/closed}}{{/root}}
+		<ul>
+			{{#root}}{{<closed}}{{/closed}}{{/root}}
+		</ul>
 	</div>
 </body>
 </html>

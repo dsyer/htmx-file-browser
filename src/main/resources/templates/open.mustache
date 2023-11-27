@@ -1,0 +1,10 @@
+
+<div>
+	<a href="" hx-get="/close/{{encoded}}" hx-target="closest div">-</a>
+	<span>{{name}}</span>
+		<div>
+			{{#children}}
+			{{<closed}}{{/closed}}
+			{{/children}}
+		</div>
+</div>

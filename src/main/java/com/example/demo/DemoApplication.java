@@ -16,10 +16,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
 import io.jstach.jstache.JStache;
-import io.jstach.jstache.JStacheLambda;
-import io.jstach.jstache.JStacheLambda.Raw;
 import io.jstach.jstache.JStachePath;
-import io.jstach.jstachio.JStachio;
 import io.jstach.opt.spring.webmvc.JStachioModelView;
 
 @SpringBootApplication
@@ -37,48 +34,40 @@ class HomeController {
 
 	@GetMapping
 	public View home() {
-		return JStachioModelView.of(new IndexPage(Folder.cwd()));
+		return JStachioModelView.of(new IndexPage(Closed.cwd()));
 	}
 
 	@HxRequest
 	@GetMapping("/open/{path}")
 	public View open(@PathVariable String path) {
-		return JStachioModelView.of(new Folder(Node.decode(path)).doOpen());
+		return JStachioModelView.of(new Closed(Node.decode(path)).doOpen());
 	}
 
 	@HxRequest
 	@GetMapping("/close/{path}")
 	public View close(@PathVariable String path) {
-		return JStachioModelView.of(new Folder(Node.decode(path)));
+		return JStachioModelView.of(new Closed(Node.decode(path)));
 	}
 }
 
 @JStache(path = "index")
 class IndexPage {
-	private Folder root;
+	private Closed root;
 
-	public IndexPage(Folder root) {
+	public IndexPage(Closed root) {
 		this.root = root;
 	}
 
-	public Folder getRoot() {
+	public Closed getRoot() {
 		return root;
 	}
 
-	public void setRoot(Folder root) {
+	public void setRoot(Closed root) {
 		this.root = root;
-	}
-
-	@Raw
-	@JStacheLambda
-	public String html(Node node) {
-		StringBuilder appendable = new StringBuilder();
-		JStachio.render(node, appendable);
-		return appendable.toString();
 	}
 }
 
-@JStache(path = "file")
+@JStache(template = "<span>{{name}}</span><br/>")
 class Node implements Comparable<Node> {
 	private String name;
 	private Node parent;
@@ -122,72 +111,62 @@ class Node implements Comparable<Node> {
 		this.parent = parent;
 	}
 
+	public String getPath() {
+		if (getParent() == null) {
+			return getName();
+		}
+		return ((Closed) getParent()).getPath() + "/" + getName();
+	}
+
+	public String getEncoded() {
+		return encode(getPath());
+	}
+
 	@Override
 	public int compareTo(Node o) {
 		return (this.isLeaf() != o.isLeaf()) ? this.isLeaf() ? 1 : -1 : this.name.compareTo(o.name);
 	}
 
-	@Raw
-	@JStacheLambda
-	public String html(Node node) {
-		StringBuilder appendable = new StringBuilder();
-		JStachio.render(node, appendable);
-		return appendable.toString();
-	}
-
 }
 
-@JStache(path = "folder")
-class Folder extends Node {
+@JStache(path = "closed")
+class Closed extends Node {
 
-	public static Folder ROOT = new Folder("/");
+	public static Closed ROOT = new Closed("/");
 
-	private boolean open = false;
-
-	public static Folder cwd() {
-		return new Folder(".");
+	public static Closed cwd() {
+		return new Closed(".");
 	}
 
-	public Folder doOpen() {
-		setOpen(true);
+	public Open doOpen() {
+		Open open = new Open(this);
 		File top = new File(getPath());
 		if (top.listFiles() == null) {
-			return this;
+			return open;
 		}
 		for (File file : top.listFiles()) {
 			if (file.isDirectory()) {
-				add(new Folder(file.getName()));
+				open.add(new Closed(file.getName()));
 			} else {
-				add(new Node(file.getName()));
+				open.add(new Node(file.getName()));
 			}
 		}
-		return this;
+		return open;
 	}
 
 	private Set<Node> children = new TreeSet<>();
 
-	public Folder(String name) {
+	public Closed(String name) {
 		super(StringUtils.getFilename(name));
 		String[] tokens = StringUtils.tokenizeToStringArray(name, "/");
 		if (tokens.length <= 1) {
 			return;
 		}
-		Folder folder = this;
+		Closed folder = this;
 		for (int i=tokens.length - 1; i-->0;) {
-			folder.setParent(new Folder(tokens[i]));
-			folder = (Folder) folder.getParent();
+			folder.setParent(new Closed(tokens[i]));
+			folder = (Closed) folder.getParent();
 		}
-	}
-
-	public String getPath() {
-		if (getParent() == null) {
-			return getName();
-		}
-		return ((Folder) getParent()).getPath() + "/" + getName();
-	}
-
-	public String getEncoded() {
-		return encode(getPath());
 	}
 
 	@Override
@@ -201,23 +180,24 @@ class Folder extends Node {
 	}
 
 	public boolean isOpen() {
-		return open;
-	}
-
-	public void setOpen(boolean open) {
-		this.open = open;
+		return false;
 	}
 
 	public Set<Node> getChildren() {
 		return children;
 	}
+}
 
-	@Raw
-	@JStacheLambda
-	public String html(Node node) {
-		StringBuilder appendable = new StringBuilder();
-		JStachio.render(node, appendable);
-		return appendable.toString();
+@JStache(path = "open")
+class Open extends Closed {
+
+	public Open(Closed closed) {
+		super(closed.getName());
+		setParent(closed.getParent());
 	}
 
+	@Override
+	public boolean isOpen() {
+		return true;
+	}
 }

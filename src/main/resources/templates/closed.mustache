@@ -6,6 +6,6 @@
 {{/leaf}}
 {{#leaf}}
 <li class="li-file">
-	<span class="file level-{{level}}"><span class="text">{{>file}} {{name}}</span></span>
+	<a href="" hx-get="/file/{{encoded}}" hx-swap="outerHTML" hx-target="find .popup" class="file level-{{level}}"><span class="text">{{>file}} {{name}}<span class="popup"></span></span></a>
 </li>
 {{/leaf}}

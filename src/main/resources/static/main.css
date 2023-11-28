@@ -20,6 +20,23 @@ ul {
 	outline: 1px dotted rgba(0, 0, 0, 0);
 }
 
+.file .popup {
+	visibility: hidden;
+	background-color: #ffe;
+	color: #000;
+	text-align: left;
+	border-radius: 6px;
+	border-style: solid;
+	border-color: #000;
+	border-width: 1px;
+	padding: 8px;
+	position: absolute;
+	z-index: 1;
+	bottom: 125%;
+	left: 15%;
+	margin-left: 8px;
+  }
+
 .folder-hide .icon-caret-down {
 	transform: rotate(-90deg);
 }

@@ -1,8 +1,11 @@
 package com.example.demo;
 
 import java.io.File;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.TreeSet;
 
 import org.springframework.boot.SpringApplication;
@@ -16,11 +19,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
 import io.jstach.jstache.JStache;
+import io.jstach.jstache.JStacheFormatterTypes;
 import io.jstach.jstache.JStachePath;
 import io.jstach.opt.spring.webmvc.JStachioModelView;
 
 @SpringBootApplication
 @JStachePath(prefix = "templates/", suffix = ".mustache")
+@JStacheFormatterTypes(types = LocalDateTime.class)
 public class DemoApplication implements WebMvcConfigurer {
 
 	public static void main(String[] args) {
@@ -48,6 +53,13 @@ class HomeController {
 	public View close(@PathVariable String path) {
 		return JStachioModelView.of(new Closed(Node.decode(path)));
 	}
+
+	@HxRequest
+	@GetMapping("/file/{path}")
+	public View file(@PathVariable String path) {
+		return JStachioModelView.of(new Details(Node.decode(path)));
+	}
+
 }
 
 @JStache(path = "file")
@@ -178,7 +190,7 @@ class Closed extends Node {
 			return;
 		}
 		Closed folder = this;
-		for (int i=tokens.length - 1; i-->0;) {
+		for (int i = tokens.length - 1; i-- > 0;) {
 			folder.setParent(new Closed(tokens[i]));
 			folder = (Closed) folder.getParent();
 		}
@@ -214,5 +226,29 @@ class Open extends Closed {
 	@Override
 	public boolean isOpen() {
 		return true;
+	}
+}
+
+@JStache(template = """
+	<span class="popup" style="visibility:visible;">Name: {{name}}<br/>Size: {{size}}<br/>Modified: {{time}}</span>
+	""")
+class Details {
+
+	private File file;
+
+	public Details(String path) {
+		this.file = new File(path);
+	}
+
+	public long size() {
+		return this.file.length();
+	}
+
+	public String name() {
+		return this.file.getName();
+	}
+
+	public LocalDateTime time() {
+		return LocalDateTime.ofInstant(Instant.ofEpochMilli(this.file.lastModified()), TimeZone.getDefault().toZoneId());
 	}
 }

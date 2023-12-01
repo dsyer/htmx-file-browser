@@ -3,7 +3,7 @@
 	<a href="" hx-get="/close/{{encoded}}" hx-target="closest li" class="folder level-{{level}}"><span class="text"><span>{{>caret}}</span> {{>folder}} {{name}}</span></a>
 	<ul class="ul">
 		{{#children}}
-		{{<closed}}{{/closed}}
+		{{>closed}}
 		{{/children}}
 	</ul>
 </li>

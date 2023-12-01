@@ -76,19 +76,16 @@ class HomeController {
 
 @JStache(path = "index")
 class IndexPage {
-	private Closed root;
+	private Open root;
 
 	public IndexPage(Closed root) {
-		this.root = root;
+		this.root = root.doOpen();
 	}
 
-	public Closed getRoot() {
+	public Open getRoot() {
 		return root;
 	}
 
-	public void setRoot(Closed root) {
-		this.root = root;
-	}
 }
 
 class Node implements Comparable<Node> {

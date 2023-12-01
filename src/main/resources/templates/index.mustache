@@ -16,7 +16,7 @@
 	<h1>Browse</h1>
 	<div class="container">
 		<ul>
-			{{#root}}{{<closed}}{{/closed}}{{/root}} </ul>
+			{{#root}}{{#open}}{{>open}}{{/open}}{{^open}}{{>closed}}{{/open}}{{/root}} </ul>
 	</div>
 	<script lang="javascript">
 		function hide() {

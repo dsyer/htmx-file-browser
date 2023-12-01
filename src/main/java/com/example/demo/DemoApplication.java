@@ -20,12 +20,24 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
 import io.jstach.jstache.JStache;
 import io.jstach.jstache.JStacheFormatterTypes;
+import io.jstach.jstache.JStachePartial;
+import io.jstach.jstache.JStachePartials;
 import io.jstach.jstache.JStachePath;
 import io.jstach.opt.spring.webmvc.JStachioModelView;
 
 @SpringBootApplication
 @JStachePath(prefix = "templates/", suffix = ".mustache")
 @JStacheFormatterTypes(types = LocalDateTime.class)
+@JStachePartials({
+		@JStachePartial(name = "caret", template = """
+					<svg aria-hidden="true" focusable="false" data-icon="caret-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="icon-caret-down"><path fill="currentColor" d="M31.3 192h257.3c17.8 0 26.7 21.5 14.1 34.1L174.1 354.8c-7.8 7.8-20.5 7.8-28.3 0L17.2 226.1C4.6 213.5 13.5 192 31.3 192z"></path></svg>
+				"""),
+		@JStachePartial(name = "file", template = """
+					<span class="icon"><svg aria-hidden="true" focusable="false" data-icon="file" role="img" xmlns="http://www.w3.org/2000/svg" class="icon-file" viewBox="0 0 384 512"><path fill="currentColor" d="M369.9 97.9L286 14C277 5 264.8-.1 252.1-.1H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V131.9c0-12.7-5.1-25-14.1-34zM332.1 128H256V51.9l76.1 76.1zM48 464V48h160v104c0 13.3 10.7 24 24 24h104v288H48z"></path></svg></span>
+				"""),
+		@JStachePartial(name = "folder", template = """
+					<span class="icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="folder" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icon-folder"><path fill="currentColor" d="M464 128H272l-64-64H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V176c0-26.51-21.49-48-48-48z"></path></svg></span>
+				""") })
 public class DemoApplication implements WebMvcConfigurer {
 
 	public static void main(String[] args) {
@@ -60,18 +72,6 @@ class HomeController {
 		return JStachioModelView.of(new Details(Node.decode(path)));
 	}
 
-}
-
-@JStache(path = "file")
-class FileIcon {
-}
-
-@JStache(path = "folder")
-class FolderIcon {
-}
-
-@JStache(path = "caret")
-class CaretIcon {
 }
 
 @JStache(path = "index")
@@ -230,8 +230,8 @@ class Open extends Closed {
 }
 
 @JStache(template = """
-	<span class="popup" style="visibility:visible;">Name: {{name}}<br/>Size: {{size}}<br/>Modified: {{time}}</span>
-	""")
+		<span class="popup" style="visibility:visible;">Name: {{name}}<br/>Size: {{size}}<br/>Modified: {{time}}</span>
+		""")
 class Details {
 
 	private File file;
@@ -249,6 +249,7 @@ class Details {
 	}
 
 	public LocalDateTime time() {
-		return LocalDateTime.ofInstant(Instant.ofEpochMilli(this.file.lastModified()), TimeZone.getDefault().toZoneId());
+		return LocalDateTime.ofInstant(Instant.ofEpochMilli(this.file.lastModified()),
+				TimeZone.getDefault().toZoneId());
 	}
 }

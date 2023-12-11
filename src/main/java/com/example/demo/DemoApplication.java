@@ -227,7 +227,7 @@ class Open extends Closed {
 }
 
 @JStache(template = """
-		<span class="popup" style="visibility:visible;">Name: {{name}}<br/>Size: {{size}}<br/>Modified: {{time}}</span>
+		<span class="popup" _="on click hide with visibility" style="visibility:visible;">Name: {{name}}<br/>Size: {{size}}<br/>Modified: {{time}}</span>
 		""")
 class Details {
 

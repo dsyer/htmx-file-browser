@@ -9,25 +9,16 @@
 	<link rel="stylesheet" type="text/css" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="/main.css" />
 	<script src='https://unpkg.com/bootstrap/dist/js/bootstrap.min.js'></script>
-	<script src='https://unpkg.com/htmx.org/dist/htmx.js'></script>
+	<script src='https://unpkg.com/htmx.org'></script>
+	<script src='https://unpkg.com/hyperscript.org'></script>
 </head>
 
-<body onclick="hide()"
+<body _="on click hide .popup">
 	<h1>Browse</h1>
 	<div class="container">
 		<ul>
 			{{#root}}{{#open}}{{>open}}{{/open}}{{^open}}{{>closed}}{{/open}}{{/root}} </ul>
 	</div>
-	<script lang="javascript">
-		function hide() {
-			var popups = document.getElementsByClassName("popup");
-			if (popups) {
-				for (let i = 0; i < popups.length; i++) {
-					popups[i].style.visibility = "hidden";
-				}
-			}
-		};
-	</script>
 </body>
 
 </html>
